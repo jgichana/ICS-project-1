@@ -13,7 +13,7 @@ const Hero=() =>{
             for students to easily buy and sell furniture.<br/>
             Whether you’re furnishing your hostel room or looking to declutter,<br/>
             find affordable, quality pieces right here on campus.</p>
-            <Link to ="/productListing">
+            <Link to ="/products">
             <button className='btn'>Shop Now </button>
             </Link>
         </div>

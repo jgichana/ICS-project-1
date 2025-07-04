@@ -9,14 +9,14 @@ import Homepage from './pages/homepage';
 import ItemDisplay from './pages/itemDisplay';
 import PrivateRoute from './components/privateRoute';
 import SellerProductPage from './pages/sellerPage';
-import BuyerProductPage from './pages/buyerPage';
+// import BuyerProductPage from './pages/buyerPage';
 import Navbar from './pages/Navbar';
 import ProductListPage from './pages/productPage';
-import CartPage from "./pages/cart"
+import CartPage from './pages/cart';
 function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userId'));
-  const userType = localStorage.getItem('userType'); 
+  const userType = localStorage.getItem('userType');  
 
   const LoginSuccess = (userId, userType) => {
     localStorage.setItem('userId', userId);
@@ -48,12 +48,12 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/products" element={<ProductListPage />} />
           <Route path="/form" element={<ProductUploadForm />} />
-         <Route path="/cart" element={<CartPage/>}/>
+         <Route path="/Cart" element={<CartPage/>}/>
           <Route path="/login" element={isLoggedIn ? (
                 userType === 'seller' ? (
         <Navigate to="/seller" replace />
       ) : (
-        <Navigate to="/buyer" replace />
+        <Navigate to="/products" replace />
       )
     ) : (
       <Login onLoginSuccess={LoginSuccess} />
@@ -71,7 +71,7 @@ function App() {
           <Route element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
             <Route path="/itemDisplay" element={<ItemDisplay />} />
           </Route>
-          <Route path="/buyer" element={<BuyerProductPage />} />
+          {/* <Route path="/buyer" element={<BuyerProductPage />} /> */}
         <Route path="/seller" element={<SellerProductPage userId={localStorage.getItem('userId')} />} />
       
           </Routes>

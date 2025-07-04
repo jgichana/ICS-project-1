@@ -259,4 +259,4 @@ const contentType = response.headers.get('content-type');
   );
 }
 
-export default Register;
+export default Register; 
