@@ -130,7 +130,7 @@ function Register({ onRegisterSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType, setUserType] = useState('Buyer'); 
+  const [userType, setUserType] = useState(''); 
   const [message, setMessage] = useState(''); 
   const [loading, setLoading] = useState(false); 
 
@@ -238,10 +238,12 @@ const contentType = response.headers.get('content-type');
         <select id='userType' value={userType} onChange={(e) => setUserType(e.target.value)}>
           <option value="Buyer">Buyer</option> 
           <option value="Seller">Seller</option>
+          <option value="Seller">Seller</option>
+
         </select>
 
         <button   type="submit" disabled={loading}>
-          Sign up
+        Sign up
         </button>
       </form>
 

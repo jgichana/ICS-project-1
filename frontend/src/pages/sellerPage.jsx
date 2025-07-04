@@ -4,6 +4,7 @@ import '../App.css';
 
 function SellerProductPage({ userId }) {
     const formRef = useRef(null);
+    const [message,setMessage] = useState('');
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formState, setFormState] = useState({
@@ -54,12 +55,14 @@ useEffect(() => {
       });
       if (!res.ok) throw new Error('Failed to add category');
       const newCat = await res.json();
+
       setCategories([...categories, newCat]);
       setFormState((prev) => ({ ...prev, category_id: newCat.id }));
       setNewCategory('');
     } catch (err) {
+
       console.error('Error adding category:', err);
-      alert('Error adding category');
+      setMessage('Error adding category:', err);
     }
   };
 
@@ -127,7 +130,7 @@ if (categoryId === 'add-new') {
     categoryId = newCat.id;
     setCategories([...categories, newCat]);
   } catch (err) {
-    console.error('Error creating category:', err);
+    setMessage('Error creating category:', err);
     return;
   }
 }
@@ -136,7 +139,7 @@ if (categoryId === 'add-new') {
     formData.append('name', formState.name);
     formData.append('description', formState.description);
     formData.append('price', formState.price);
-    formData.append('category_id', categoryId);
+    // formData.append('category_id', formState.category_id);
     formData.append('userId', userId);
     if (formState.image) {
       formData.append('image', formState.image);
@@ -151,7 +154,7 @@ if (categoryId === 'add-new') {
 
     await fetch(url, { method, body: formData });
     setEditingProduct(null);
-    setFormState({ name: '', description: '', price: '', category_id: '', image: "", unavailable:0 });
+    setFormState({ name: '', description: '', price: '', category_id: '', image: " ", unavailable:0 });
     setNewCategory('');
     fetchProducts();
   };
@@ -166,8 +169,8 @@ if (categoryId === 'add-new') {
             <img src={`http://localhost:8000${prod.image_url}`} alt={prod.name} />
             <h4>{prod.name}</h4>
             <p>{prod.description}</p>
-            <p>${prod.price}</p>
-            <p style= {{color: prod.unavailable === 0 ? 'green' : 'red' }}> {prod.unavailable ===0 ? 'Available' : 'Unavailable'}</p>
+            <p>Ksh.{prod.price}</p>
+            <p> {prod.unavailable ===0 ? 'Available' : 'Unavailable'}</p>
             <button onClick={() => handleEdit(prod)}>Edit</button>
             <button onClick={() => {if (window.confirm('Are you sure you want to delete this product?')) {
         handleDelete(prod.id)
@@ -182,13 +185,13 @@ if (categoryId === 'add-new') {
         <textarea name="description" placeholder="Description" value={formState.description} onChange={handleChange} />
         <input type="number" name="price" placeholder="Price" value={formState.price} onChange={handleChange} required />
 
-        <select name="category_id" value={formState.category_id} onChange={handleChange} required>
-    <option value="">Select Category</option>
+        {/* <select name="category_id" value={formState.category_id} onChange={handleChange} required>
+    <option key= "default" value="">Select Category</option>
     {categories.map((cat) => (
     <option key={cat.id} value={cat.id}>{cat.name}</option>
     ))}
   <option value="add-new">+ Add New Category</option>
-  </select>
+  </select> */}
 
 
         {formState.category_id === 'add-new' && (
@@ -220,10 +223,12 @@ if (categoryId === 'add-new') {
 </div>
 
         <input type="file" name="image" accept="image/*" onChange={handleChange} />
+              {message && <p className="form-message">{message}</p>}
+
         <button type="submit">{editingProduct ? 'Update Product' : 'Upload Product'}</button>
       <button type="button" onClick={handleCancel} className="cancel-button">
                       Cancel
-                          </button>
+        </button>
 
       </form>
 

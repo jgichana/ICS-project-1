@@ -32,10 +32,12 @@ function Login({ onLoginSuccess }) {
 
       if (response.ok) {
         setMessage('Log in successful!');
-        if (onLoginSuccess) { 
+        console.log(data.userType)
+        if (onLoginSuccess) {           
           onLoginSuccess(data.userId, data.userType);
+           navigate('/');
         }
-        navigate('/');
+
       } else {
         setMessage(`Error: ${data.message }`);
         console.error('Registration error:', data);

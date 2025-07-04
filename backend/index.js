@@ -112,13 +112,20 @@ app.post('/register', async (req, res) => {
             const sellerquery = "INSERT INTO sellers (userid) VALUES (?)";
             await dbPool.promise().query(sellerquery, [userId]);
         }     
+        else {
+          const adminquery = "INSERT INTO ADMIN (NAME,EMAIL, PASSWORD) VALUES ?, ?, ?";
+           const values = [name, email, hashPassword];
+           await dbPool.promise().query(adminquery, values);
+
+        }
              res.status(201).json({
             message: 'User registered successfully!',
             userId: userId,
+            userType: userType.toLowerCase(),
             user: { 
                 name, 
                 email, 
-                userType: userType.toLowerCase() 
+                 userType: userType.toLowerCase() 
             }
         });
         
@@ -183,8 +190,8 @@ app.post('/products', upload.single('image'), async (req, res) => {
   }
   try {
     await dbPool.promise().query(
-      'INSERT INTO products (name, description, price, category_id, image_url, seller_id, unavailable) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [name, description, price, category_id, image_url, userId, 0]
+      'INSERT INTO products (name, description, price,  image_url, seller_id, unavailable) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, description, price, image_url, userId, 0]
     );
     res.status(201).json({ message: 'Product uploaded successfully' });
   } catch (err) {

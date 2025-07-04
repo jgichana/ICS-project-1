@@ -2,7 +2,14 @@
 *{
 font-family: Georgia, 'Times New Roman', Times, serif;
 }
-
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  }
+body::-webkit-scrollbar {
+  display: none;
+}
 .app-container {
   display: flex;
   justify-content: center;
@@ -121,9 +128,9 @@ font-family: Georgia, 'Times New Roman', Times, serif;
   }
 }
 
-nav{
+nav.nav-container  {
+  background-color: #efc9aa;
   width: 100%;
-  color:black;
   padding:4px 0;
   position:fixed;
   top:0;
@@ -132,34 +139,47 @@ nav{
   align-items: center;
   justify-content: flex-end;
   z-index: 10;
+  text-decoration: none;
 
 }
 
 
-nav ul li{
+nav.nav-container  ul li {
   display: inline-block;
   list-style:none;
   margin:5px 20px;
   font-size:16px;
-  
+  }
+  nav.nav-container  ul li a{
+    color:black;
+    text-decoration: none;
+
+  }
+
+nav.nav-container .active {
+  font-weight: bold;
+  color: #ee2e31;
+  text-decoration: none;
 }
 
 .hero{
-  width:100%;
-  min-height: 100vh;
-  background:linear-gradient(rgba(238, 237, 243, 0.7),rgba(8,0,58,0.7)),url("./assets/logo4.jpg");
+  height: 100vh;
+  min-width: 100vw;
+  background:linear-gradient(   rgba(255,255,255,0.2) 0%,
+  rgba(0,0,0,0.6)),url("./assets/pexels-designecologist-1248583.jpg");
    background-size:cover; 
    background-position:center;
-   color:#fff;
    display: flex;
    align-items: center;
    justify-content: center;
+   overflow:hidden
    }
 
    .hero-text{
     text-align: center;
     max-width: 800px;
-   }
+      color:white;
+}
    
    .hero-text h1{
     font-size: 60px;
@@ -444,7 +464,7 @@ h2 {
 
 /* Product grid */
 .product-list {
-  display: flex;
+  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.5rem;
 }
@@ -528,3 +548,6 @@ h2 {
   font-size: 0.8rem;
   padding: 2px 6px;
 }
+
+
+
