@@ -171,8 +171,8 @@ if (categoryId === 'add-new') {
             <p>{prod.description}</p>
             <p>Ksh.{prod.price}</p>
             <p> {prod.unavailable ===0 ? 'Available' : 'Unavailable'}</p>
-            <button onClick={() => handleEdit(prod)}>Edit</button>
-            <button onClick={() => {if (window.confirm('Are you sure you want to delete this product?')) {
+            <button className="btn" onClick={() => handleEdit(prod)}>Edit</button>
+            <button className="cancel-button"onClick={() => {if (window.confirm('Are you sure you want to delete this product?')) {
         handleDelete(prod.id)
     }}}>Delete</button>
           </div>
@@ -223,10 +223,10 @@ if (categoryId === 'add-new') {
 </div>
 
         <input type="file" name="image" accept="image/*" onChange={handleChange} />
-              {message && <p className="form-message">{message}</p>}
+        {message && <p className="form-message">{message}</p>}
 
-        <button type="submit">{editingProduct ? 'Update Product' : 'Upload Product'}</button>
-      <button type="button" onClick={handleCancel} className="cancel-button">
+        <button  type="submit">{editingProduct ? 'Update Product' : 'Upload Product'}</button>
+      <button  type="button" onClick={handleCancel} className="cancel-button">
                       Cancel
         </button>
 

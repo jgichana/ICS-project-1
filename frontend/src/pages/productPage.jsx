@@ -1,48 +1,13 @@
-// // src/components/ProductListPage.js
-// import React, { useEffect, useState } from 'react';
-
-// function ProductListPage() {
-//   const [products, setProducts] = useState([]);
-
-//   useEffect(() => {
-//     fetch('http://localhost:8000/products')
-//       .then(res => res.json())
-//       .then(data => setProducts(data))
-//       .catch(err => console.error('Failed to fetch products:', err));
-//   }, []);
-
-//   return (
-//     <div className="buyer-container">
-//       <h2>Available Products</h2>
-//       <div className="product-list">
-//         {products.map(product => (
-//           <div key={product.id} className="product-card">
-//             <img
-//               src={`http://localhost:8000${product.image_url}`}
-//               alt={product.name}
-//               style={{ width: '200px', height: '200px', objectFit: 'cover' }}
-//             />
-//             <h4>{product.name}</h4>
-//             <p>{product.description}</p>
-//             <p><strong>Ksh.{product.price}</strong></p>
-//             <p style ={{color: product.unavailable === 0 ? 'green' : 'red' }}> {product.unavailable ===0 ? 'Available' : 'Unavailable'}</p>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ProductListPage;
 
 
 import React, { useEffect, useState } from 'react';
 import '../App.css';
+import { Link } from 'react-router-dom';
 
-function ProductListPage({userType}) {
+function ProductListPage({userType, isLoggedIn }) {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-
+  const[searchTerm, setSearchTerm]=useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -68,6 +33,7 @@ function ProductListPage({userType}) {
   return (
     <div className="buyer-container">
       <h2>Furniture Store</h2>
+       
       <div className="product-list">
         {products.map(prod => (
           <div key={prod.id} className="product-card">
@@ -77,16 +43,32 @@ function ProductListPage({userType}) {
             <p>Ksh.{prod.price}</p>
             
            <p style ={{color: prod.unavailable === 0 ? 'green' : 'red' }}> {prod.unavailable ===0 ? 'Available' : 'Unavailable'}</p>
-           {/* {userType === 'buyer' && ( */}
-            <button disabled={prod.unavailable} onClick={() => addToCart(prod)}>
+              {isLoggedIn?(
+              <div>
+                <button className='btn' disabled={prod.unavailable} onClick={()=> addToCart(prod)}>
+                {prod.unavailable ? 'In Cart' : 'Add to Cart'}
+
+                </button>
+                {/* <p>Seller:{product.seller.name}</p>
+                <p>Contact:{product.seller.phone}</p>
+                <p>Email:{product.seller.email}</p> */}
+              </div>
+            ):(
+              <Link to="/login" className='btn'>Login to Purchase</Link>
+            ) 
+            }
+            {/* <button disabled={prod.unavailable} onClick={() => addToCart(prod)}>
               {prod.unavailable ? 'In Cart' : 'Add to Cart'}
-            </button> 
+            </button>  */}
           </div>
         ))}
+      {/* ):(
+        <p>No products found</p>
+      ) */}
       </div>
  </div>
-      );
-    }
+)}
+    
       /* <h3>Cart</h3>
       {cart.length === 0 ? <p>Cart is empty</p> : (
         <div className="cart">

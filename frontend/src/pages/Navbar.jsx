@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-import '../App.css' 
-// import cartIcon from '../assets/cartIcon.png';
-function Navbar({isLoggedIn, handleLogout, user}) {
+ import cartIcon from '../assets/cartIcon.png';
+ import { useCart } from "./CartContext";
+
+function Navbar({isLoggedIn, handleLogout}) {
   const [menu, setMenu] = useState("Home");
+  const {itemCount}=useCart();
+
+
 
   return (
-    <nav className="nav-container">
+    <nav>
+    <div className="container">
       <ul>
         <li>
           <Link to="/" onClick={() => setMenu("Home")} className={menu === "Home" ? "active" : ""}>
@@ -20,7 +25,7 @@ function Navbar({isLoggedIn, handleLogout, user}) {
         </li>
         <li>
           {isLoggedIn ? (
-            <Link to ="/login"> <button onClick={handleLogout}>Sign Out</button>
+            <Link to ="/login"> <button className="btn" onClick={handleLogout}>Sign Out</button>
 </Link>
       ) : (
         <Link to="/login"> <button>Sign In</button></Link>
@@ -35,10 +40,14 @@ function Navbar({isLoggedIn, handleLogout, user}) {
               Sell an item
             </Link>
           </li>
-      
+        {isLoggedIn && (<li> <Link to="/cart" onClick={() =>setMenu("Cart")} className={menu==="Cart"? 'active':""}>
+        <img src={cartIcon} alt="Cart" className="cart-icon"/>
+        {itemCount>0 && <span className="cart-count">{itemCount}</span>}
+  </Link></li>)}
   
       
         </ul>
+        </div>
     </nav>
   );
 };

@@ -11,7 +11,9 @@ import PrivateRoute from './components/privateRoute';
 import SellerProductPage from './pages/sellerPage';
 import Navbar from './pages/Navbar';
 import ProductListPage from './pages/productPage';
-import CartPage from "./pages/cart"
+import CartPage from './pages/cart';
+import PaymentForm from './pages/paymentForm';
+
 function App() {
   const [isRegistered,setIsRegistered] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userId'));
@@ -67,9 +69,12 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/products" element={<ProductListPage userType="buyer"/>} />
+          <Route path="/products" element={<ProductListPage userType="buyer" isLoggedIn={isLoggedIn} />} />
           <Route path="/form" element={<ProductUploadForm />} />
          <Route path="/cart" element={<CartPage/>}/>
+          <Route path="/pay" element={<PaymentForm/>}/>
+
+
           <Route
   path="/login"
   element={
