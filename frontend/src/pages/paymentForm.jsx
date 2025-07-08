@@ -12,8 +12,8 @@ const PaymentForm = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: parseFloat(amount), // Ensure amount is a number
-          phone: phone, // Frontend sends 'phone', backend expects 'phone'
+          amount: parseFloat(amount), 
+          phone: phone, 
         }),
       });
 
@@ -21,32 +21,26 @@ const PaymentForm = () => {
 
       if (res.ok) {
         setMessage('STK Push sent to phone. Check your M-Pesa.');
-      } else {
-        // FINAL CRITICAL FIX: More robust error message extraction to ensure 'message' is always a string
-        let displayMessage = 'Payment failed. Please try again.'; // Default fallback message
 
-        // Case 1: Backend sends a 'message' field (e.g., "Missing required fields")
+      } else {
+        let displayMessage = 'Payment failed. Please try again.'; 
+
         if (data.message) {
           displayMessage = data.message;
         }
-        // Case 2: Backend sends an 'error' field
         else if (data.error) {
           if (typeof data.error === 'object') {
-            // If data.error is an object, try to extract a specific message or stringify it
-            if (data.error.errorMessage) { // Common for M-Pesa API errors
+            if (data.error.errorMessage) { 
               displayMessage = data.error.errorMessage;
-            } else if (data.error.message) { // Common for general backend errors
+            } else if (data.error.message) { 
               displayMessage = data.error.message;
             } else {
-              // If it's an object but no specific message field, stringify the whole object
               displayMessage = JSON.stringify(data.error);
             }
           } else if (typeof data.error === 'string') {
-            // If data.error is already a string
             displayMessage = data.error;
           }
         }
-        // Case 3: Error properties are at the top-level of the 'data' object (e.g., direct M-Pesa API response)
         else if (data.errorCode || data.errorMessage || data.requestId) {
             displayMessage = data.errorMessage || `Error Code: ${data.errorCode || 'N/A'}`;
             if (data.requestId) {
@@ -76,7 +70,7 @@ const PaymentForm = () => {
             <label>Phone Number </label>
             <input
               type="text"
-              placeholder='e.g., 254708374149 or 0708374149'
+              placeholder='e.g., 254... or 07...'
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required

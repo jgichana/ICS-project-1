@@ -194,27 +194,78 @@ console.log('FILE:', req.file);
   }
 });
 
+//get a single product by id
+app.get('/products/:id', async (req, res) => {
+    const productId = req.params.id; // Get the ID from the URL
+
+    try {
+        const [rows] = await dbPool.promise().query('SELECT * FROM products WHERE id = ?', [productId]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        res.json(rows[0]); // Return the first (and only) product found
+    } catch (err) {
+        console.error('Error fetching single product:', err);
+        res.status(500).json({ message: 'Failed to fetch product.', error: err.message });
+    }
+});
+
+
+// Update a product
+// app.put('/products/:id', upload.single('image'), async (req, res) => {
+//   const { name, description, price, category_id, unavailable } = req.body;
+//   const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+
+//   try {
+//     const q = image_url
+//       ? 'UPDATE products SET name=?, description=?, price=?, category_id=?, image_url=? unavailable=? WHERE id=?'
+//       : 'UPDATE products SET name=?, description=?, price=?, category_id=? unavailable=?  WHERE id=?';
+
+//     const params = image_url
+//       ? [name, description, price, category_id, image_url, unavailable, req.params.id]
+//       : [name, description, price, category_id, unavailable, req.params.id];
+
+//     await dbPool.promise().query(q, params);
+//     res.json({ message: 'Product updated' });
+//   } catch (err) {
+//     res.status(500).json({ message: 'Update failed' });
+//   }
+// });
 
 // Update a product
 app.put('/products/:id', upload.single('image'), async (req, res) => {
-  const { name, description, price, category_id, unavailable } = req.body;
-  const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const productId = req.params.id; // Get product ID from URL
+    const { name, description, price, category_id, unavailable } = req.body;
+    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
 
-  try {
-    const q = image_url
-      ? 'UPDATE products SET name=?, description=?, price=?, category_id=?, image_url=? unavailable=? WHERE id=?'
-      : 'UPDATE products SET name=?, description=?, price=?, category_id=? unavailable=?  WHERE id=?';
+    try {
+        let q;
+        let params;
 
-    const params = image_url
-      ? [name, description, price, category_id, image_url, unavailable, req.params.id]
-      : [name, description, price, category_id, unavailable, req.params.id];
+        if (image_url) {
+            q = 'UPDATE products SET name=?, description=?, price=?, category_id=?, image_url=?, unavailable=? WHERE id=?';
+            params = [name, description, price, category_id, image_url, unavailable, productId];
+        } else {
+            // Case: No new image, keep existing one
+            q = 'UPDATE products SET name=?, description=?, price=?, category_id=?, unavailable=? WHERE id=?';
+            params = [name, description, price, category_id, unavailable, productId];
+        }
 
-    await dbPool.promise().query(q, params);
-    res.json({ message: 'Product updated' });
-  } catch (err) {
-    res.status(500).json({ message: 'Update failed' });
-  }
+        const [result] = await dbPool.promise().query(q, params);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        res.json({ message: 'Product updated successfully' });
+    } catch (err) {
+        console.error('Error updating product:', err); // Log the actual error for debugging
+        res.status(500).json({ message: 'Failed to update product', error: err.message });
+    }
 });
+
 
 // Delete a product
 app.delete('/products/:id', async (req, res) => {

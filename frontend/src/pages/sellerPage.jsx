@@ -94,8 +94,9 @@ const handleCancel = () => {
     setFormState({ 
     name: product.name || '', 
     description: product.description || '', 
-    price: product.price || '', 
     category_id: product.category_id || '', 
+
+    price: product.price || '', 
     image: null, 
     unavailable: product.unavailable || 0 
   });
@@ -154,7 +155,7 @@ if (categoryId === 'add-new') {
 
     await fetch(url, { method, body: formData });
     setEditingProduct(null);
-    setFormState({ name: '', description: '', price: '', category_id: '', image: " ", unavailable:0 });
+    setFormState({ name: '', description: '', price: '', image: " ", unavailable:0 });
     setNewCategory('');
     fetchProducts();
   };
@@ -171,7 +172,7 @@ if (categoryId === 'add-new') {
             <p>{prod.description}</p>
             <p>Ksh.{prod.price}</p>
             <p> {prod.unavailable ===0 ? 'Available' : 'Unavailable'}</p>
-            <button className="btn" onClick={() => handleEdit(prod)}>Edit</button>
+            <button className='edit' onClick={() => handleEdit(prod)}>Edit</button>
             <button className="cancel-button"onClick={() => {if (window.confirm('Are you sure you want to delete this product?')) {
         handleDelete(prod.id)
     }}}>Delete</button>
@@ -181,25 +182,21 @@ if (categoryId === 'add-new') {
 
       <h2>{editingProduct ? 'Edit Product' : 'Upload New Product'}</h2>
       <form ref={formRef} onSubmit={handleSubmit} className="product-upload-form">
-        <input name="name" placeholder="Name" value={formState.name} onChange={handleChange} required />
+        {/* <input name="name" placeholder="Name" value={formState.name} onChange={handleChange} required /> */}
+ <select name='name' value={formState.name} onChange={handleChange}>
+          <option value="Bed">Bed</option> 
+          <option value="Drawer">Drawer</option>
+          <option value="Dining table">Dining table</option>
+          <option value="Study table">Study Table</option>
+          <option value="Drawer">Drawer</option>
+          <option value="Sofa">Sofa</option>
+
+        </select>
+
         <textarea name="description" placeholder="Description" value={formState.description} onChange={handleChange} />
         <input type="number" name="price" placeholder="Price" value={formState.price} onChange={handleChange} required />
 
-        {/* <select name="category_id" value={formState.category_id} onChange={handleChange} required>
-    <option key= "default" value="">Select Category</option>
-    {categories.map((cat) => (
-    <option key={cat.id} value={cat.id}>{cat.name}</option>
-    ))}
-  <option value="add-new">+ Add New Category</option>
-  </select> */}
-
-
-        {formState.category_id === 'add-new' && (
-          <div>
-            <input type="text" placeholder="New Category Name" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
-            <button type="button" onClick={handleAddCategory}>Add Category</button>
-          </div>
-        )}
+        
 <div className="availability-section">
   <label>Availability:</label>
   <label>
@@ -222,11 +219,25 @@ if (categoryId === 'add-new') {
   </label>
 </div>
 
+<label htmlFor="productImageInput">Product Image:</label>
         <input type="file" name="image" accept="image/*" onChange={handleChange} />
+
+
+        
+          {/* <input
+            type="file"
+            id="productImageInput"
+            accept="image/*" 
+            onChange={(e) => setProductImage(e.target.files[0])}
+          /> */}
+          {formState.image && (
+            <p className="selected-file">Selected: {formState.name}</p>
+          )}
+        
         {message && <p className="form-message">{message}</p>}
 
         <button  type="submit">{editingProduct ? 'Update Product' : 'Upload Product'}</button>
-      <button  type="button" onClick={handleCancel} className="cancel-button">
+      <button  type="button" onClick={handleCancel} className="cancel">
                       Cancel
         </button>
 

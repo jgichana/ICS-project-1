@@ -234,13 +234,12 @@ const contentType = response.headers.get('content-type');
           required
         />
 
-        <label id="role">Select your role</label>
+        {/* <label id="role">Select your role</label>
         <select id='userType' value={userType} onChange={(e) => setUserType(e.target.value)}>
           <option value="Buyer">Buyer</option> 
           <option value="Seller">Seller</option>
-          <option value="Seller">Seller</option>
 
-        </select>
+        </select> */}
 
         <button   type="submit" disabled={loading}>
         Sign up

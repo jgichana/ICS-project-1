@@ -82,14 +82,37 @@ function ProductUploadForm() {
 
       <form onSubmit={handleSubmit} className="product-upload-form">
         <div className="form-group">
-          <label htmlFor="productName">Product Name:</label>
+          {/* <select value={productName} id="productName">
+          <option value="Bed"> Bed</option>
+          <option value="">Sofa</option>
+          <option>Study Table</option>
+          <option>TV stand</option>
+          <option>Chair</option>      
+          <option>Dining table</option>
+
+          </select> */}
+
+
+        <label htmlFor="productName">Product Name:</label>
+        <select id='productName' value={productName} onChange={(e) => setProductName(e.target.value)}>
+          <option value="Bed">Bed</option> 
+          <option value="Drawer">Drawer</option>
+          <option value="Dining table">Dining table</option>
+          <option value="Study table">Study Table</option>
+          <option value="Drawer">Drawer</option>
+          <option value="Sofa">Sofa</option>
+
+        </select>
+
+
+          {/* <label htmlFor="productName">Product Name:</label>
           <input
             type="text"
             id="productName"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             required
-          />
+          /> */}
         </div>
 
         <div className="form-group">

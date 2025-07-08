@@ -28,7 +28,7 @@ function Navbar({isLoggedIn, handleLogout}) {
             <Link to ="/login"> <button className="btn" onClick={handleLogout}>Sign Out</button>
 </Link>
       ) : (
-        <Link to="/login"> <button>Sign In</button></Link>
+        <Link to="/login" > <button className="btn">Sign In</button></Link>
       )}
       </li>      
           <li>
