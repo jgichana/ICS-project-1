@@ -11,7 +11,6 @@ function SellerProductPage({ userId }) {
     name: '',
     description: '',
     price: '',
-    category_id: '',
     image: null,
     unavailable:0
   });
@@ -83,7 +82,6 @@ const handleCancel = () => {
     name: '',
     description: '',
     price: '',
-    category_id: '',
     image: null,
     unavailable: 0
   });
@@ -94,7 +92,6 @@ const handleCancel = () => {
     setFormState({ 
     name: product.name || '', 
     description: product.description || '', 
-    category_id: product.category_id || '', 
 
     price: product.price || '', 
     image: null, 
@@ -163,7 +160,7 @@ if (categoryId === 'add-new') {
   return (
     <div className="seller-container">
 
-        <h3>Your Products</h3>
+        <h2>Your Products</h2>
       <div className="product-list">
         {products.map(prod => (
           <div key={prod.id} className="product-card">
@@ -182,7 +179,7 @@ if (categoryId === 'add-new') {
 
       <h2>{editingProduct ? 'Edit Product' : 'Upload New Product'}</h2>
       <form ref={formRef} onSubmit={handleSubmit} className="product-upload-form">
-        {/* <input name="name" placeholder="Name" value={formState.name} onChange={handleChange} required /> */}
+        <p> Choose category</p>
  <select name='name' value={formState.name} onChange={handleChange}>
           <option value="Bed">Bed</option> 
           <option value="Drawer">Drawer</option>
@@ -231,7 +228,7 @@ if (categoryId === 'add-new') {
             onChange={(e) => setProductImage(e.target.files[0])}
           /> */}
           {formState.image && (
-            <p className="selected-file">Selected: {formState.name}</p>
+            <p>Selected: {formState.name}</p>
           )}
         
         {message && <p className="form-message">{message}</p>}

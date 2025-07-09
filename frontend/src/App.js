@@ -13,9 +13,10 @@ import Navbar from './pages/Navbar';
 import ProductListPage from './pages/productPage';
 import CartPage from './pages/cart';
 import PaymentForm from './pages/paymentForm';
+import { CartProvider } from './pages/CartContext';
 
 function App() {
-  const [isRegistered,setIsRegistered] = useState();
+  const [isRegistered,setIsRegistered] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userId'));
   const [user,setUser]= useState(()=> {
   const storedType = localStorage.getItem('userType'); 
@@ -44,6 +45,7 @@ function App() {
   const handleLogout = () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('userType');
+  localStorage.removeItem('shoppingCart');
   setUser(null);
   setIsLoggedIn(false);
 };
@@ -65,6 +67,8 @@ function App() {
   return (
     <div className="app-container">
       <BrowserRouter>
+              <CartProvider>
+
             <Navbar isLoggedIn={!!user} user={user} handleLogout={handleLogout} />
 
         <Routes>
@@ -106,6 +110,7 @@ function App() {
         (  <Navigate to="/login" replace />
     )}/>
           </Routes>
+          </CartProvider>
       </BrowserRouter>
     </div>
   );

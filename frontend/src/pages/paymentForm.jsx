@@ -47,7 +47,6 @@ const PaymentForm = () => {
                 displayMessage += ` (Request ID: ${data.requestId})`;
             }
         }
-        // Fallback for any other unexpected object structure
         else if (typeof data === 'object') {
             displayMessage = `An unexpected error occurred: ${JSON.stringify(data)}`;
         }

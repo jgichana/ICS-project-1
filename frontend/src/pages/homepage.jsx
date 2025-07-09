@@ -8,11 +8,10 @@ const Hero=() =>{
         <div className='hero container'>
             
         <div className='hero-text'>
-            <h1> Find Quality Furniture at Student-Friendly Prices</h1>
+            <h1> Buy or Sell Your Second Hand Furniture</h1>
             <p>Welcome to Strathmore’s Furniture Marketplace,
-            for students to easily buy and sell furniture.<br/>
-            Whether you’re furnishing your hostel room or looking to declutter,<br/>
-            find affordable, quality pieces right here on campus.</p>
+             for students to easily declutter and acquire used furniture.<br/>
+            </p>
             <Link to ="/products">
             <button className='btn'>Shop Now </button>
             </Link>

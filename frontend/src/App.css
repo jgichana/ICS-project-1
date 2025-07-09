@@ -397,16 +397,18 @@ nav ul .btn-signup.active {
   color: #64748b;
 }
 .seller-container{
-  width:100%
+  width:100%;
+  margin-top:60px
+  
 }
 
-.seller-container h3{
+.seller-container h2{
    font-size: 1.5rem;
   font-weight: 600;
   margin:0 0 0 0.5rem 0;
   color: #1e293b;
   line-height: 1.2;
-  align-self: center;
+  text-align: center;
 }
 /* PRODUCT UPLOAD FORM */
 .product-upload-container {
