@@ -24,7 +24,7 @@ function ProductListPage({ userType, isLoggedIn }) {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('http://localhost:8000/products');
+        const res = await fetch('http://localhost:8000/products-with-seller');
 
         if (!res.ok) {
           const errorText = await res.text();
@@ -95,8 +95,15 @@ function ProductListPage({ userType, isLoggedIn }) {
                 {prod.unavailable === 0 ? 'Available' : 'Unavailable'}
               </p>
 
-              {isLoggedIn ? (
-                <div>
+              {isLoggedIn &&(
+                <div className='seller-info'>
+                  <h5>Seller Information:</h5>
+                   <p><strong>Name:</strong> {prod.seller_name }</p>
+                  <p><strong>Phone:</strong> {prod.seller_phone}</p>
+                </div>
+              )}
+              {isLoggedIn?(
+                <div className='product-actions'>
                   <button
                     className='btn'
                     disabled={prod.unavailable === 1} // Disable if already in cart
@@ -105,6 +112,7 @@ function ProductListPage({ userType, isLoggedIn }) {
                   >
                     {prod.unavailable === 1 ? 'In Cart' : 'Add to Cart'}
                   </button>
+                  
                   {/* Optional: If you want to remove directly from product list */}
                   {/* {prod.unavailable === 1 && (
                       <button

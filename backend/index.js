@@ -353,6 +353,28 @@ app.get('/seller/products/:userId', async (req, res) => {
   res.json(rows);
 });
 
+//newwwww
+app.get('/products-with-seller', async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        p.*,
+        u.name as seller_name,
+        s.phone as seller_phone
+      FROM products p
+      LEFT JOIN sellers s ON p.seller_id = s.userid
+      LEFT JOIN users u ON s.userid = u.userid
+    `;
+    
+    const [rows] = await dbPool.promise().query(query);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching products with seller info:', err);
+    res.status(500).json({ message: 'Failed to fetch products with seller information' });
+  }
+});
+
+
 // Get all products (for buyers)
 app.get('/products', async (req, res) => {
   const [rows] = await dbPool.promise().query('SELECT * FROM products');
