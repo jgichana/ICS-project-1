@@ -6,7 +6,6 @@ import Login from './Login';
 import Register from './Register';
 import ProductUploadForm from './pages/form';
 import Homepage from './pages/homepage';
-import ItemDisplay from './pages/itemDisplay';
 import PrivateRoute from './components/privateRoute';
 import SellerProductPage from './pages/sellerPage';
 import Navbar from './pages/Navbar';
@@ -14,30 +13,38 @@ import ProductListPage from './pages/productPage';
 import CartPage from './pages/cart';
 import PaymentForm from './pages/paymentForm';
 import { CartProvider } from './pages/CartContext';
+import AdminDash from './pages/AdminDash';
 
 function App() {
-  const [isRegistered,setIsRegistered] = useState(false);
+  const [isRegistered,setIsRegistered] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userId'));
   const [user,setUser]= useState(()=> {
   const storedType = localStorage.getItem('userType'); 
   const storedId = localStorage.getItem('userId');
+  const storedName=localStorage.getItem('userName');
+  console.log('stored user data:',{storedType,storedId,storedName });
   
     return storedId && storedType? {
     id :storedId,
-    type:storedType,
-    isSeller:storedType==='seller'
+    userType:storedType,
+    name:storedName,
+    isSeller:storedType==='seller',
+    isAdmin:storedType==='admin'
   }: null;
 });
   
   console.log("user", user);
   console.log("isLoggedIn", isLoggedIn);
-  const LoginSuccess = (userId, userType) => {
+  const LoginSuccess = (userId, userType,userName) => {
     localStorage.setItem('userId', userId);
     localStorage.setItem('userType', userType);
+    localStorage.setItem('userName', userName);
      setUser({
     id: userId,
-    type: userType,
+    userType: userType,
+    name:userName,
     isSeller: userType === 'seller',
+    isAdmin:userType==='admin'
   });
     setIsLoggedIn(true); 
   };
@@ -45,7 +52,7 @@ function App() {
   const handleLogout = () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('userType');
-  localStorage.removeItem('shoppingCart');
+  localStorage.removeItem('userName');
   setUser(null);
   setIsLoggedIn(false);
 };
@@ -54,6 +61,7 @@ function App() {
     const userId = localStorage.getItem('userId'); 
        if (userId) {
           setIsRegistered(true);
+          setIsLoggedIn(true);
     }
   }, []); 
   
@@ -65,10 +73,9 @@ function App() {
   }, []); 
 
   return (
+    <CartProvider>
     <div className="app-container">
       <BrowserRouter>
-              <CartProvider>
-
             <Navbar isLoggedIn={!!user} user={user} handleLogout={handleLogout} />
 
         <Routes>
@@ -83,9 +90,11 @@ function App() {
   path="/login"
   element={
     isLoggedIn ? (
-      user?.type === 'seller' ? (
+      user?.userType === 'seller' ? (
         <Navigate to="/seller" replace />
-      ) : (
+      ) : user?. userType==='admin'? (
+        <Navigate to ='/admin' replace />
+      ):(
         <Navigate to="/products" replace />
       )
     ) : (
@@ -106,13 +115,22 @@ function App() {
           {/* <Route element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
             <Route path="/itemDisplay" element={<ItemDisplay />} />
           </Route> */}
-        <Route path="/seller" element={ isLoggedIn  ?(<SellerProductPage userId={user.id}/>): 
+        <Route path="/seller" element={ isLoggedIn && user?.userType==='seller' ?(<SellerProductPage userId={user.id}/>): 
         (  <Navigate to="/login" replace />
     )}/>
+    <Route path='/admin'
+    element={
+      isLoggedIn && user?. userType==='admin'?(
+        <AdminDash/>
+      ):(
+        <Navigate to='/login'replace/>
+      )
+    }
+    />
           </Routes>
-          </CartProvider>
       </BrowserRouter>
     </div>
+    </CartProvider>
   );
 }
 

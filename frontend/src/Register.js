@@ -238,6 +238,7 @@ const contentType = response.headers.get('content-type');
         <select id='userType' value={userType} onChange={(e) => setUserType(e.target.value)}>
           <option value="Buyer">Buyer</option> 
           <option value="Seller">Seller</option>
+          <option value="admin">Admin</option>
 
         </select>
 

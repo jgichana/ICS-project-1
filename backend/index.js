@@ -59,9 +59,22 @@ app.post('/login', async (req, res) => {
   try {
     const [rows] = await dbPool.promise().query("SELECT * FROM users WHERE email = ?", [email]);
     if (rows.length === 0) {
+      const[adminRows]=await dbPool.promise().query('Select*from admin where email=?',[email]);
+      if(adminRows.length===0){
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
-
+    const admin=adminRows[0];
+    const isPasswordValid=await bcrypt.compare(password,admin.password);
+     if(!isPasswordValid){
+      return res.status(401).json({ message: 'Invalid email or password.' });
+     }
+   res.status(200).json({
+        message: 'Login successful',
+        userId: admin.id,
+        userType: 'admin',
+        name: admin.name
+      });
+    }else{
     const user = rows[0];
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -72,14 +85,16 @@ app.post('/login', async (req, res) => {
     res.status(200).json({
       message: 'Login successful',
       userId: user.userid,
-      userType: user.usertype,
+      userType: user.userType,
       name: user.name
     });
+  }
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 
 
@@ -575,3 +590,55 @@ app.post('/register', async (req, res) => {
         });
     }
 });
+
+
+app.get('/admin/users', async (req, res) => {
+  try {
+    const [users] = await dbPool.promise().query('SELECT userid, name, email, userType FROM users');
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Failed to fetch users' });
+  }
+});
+
+app.delete('/admin/users/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    
+    // First delete from buyers/sellers tables
+    await dbPool.promise().query('DELETE FROM buyers WHERE userid = ?', [userId]);
+    await dbPool.promise().query('DELETE FROM sellers WHERE userid = ?', [userId]);
+    
+    // Then delete from users table
+    const [result] = await dbPool.promise().query('DELETE FROM users WHERE userid = ?', [userId]);
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Failed to delete user' });
+  }
+});
+
+app.delete('/admin/products/:id', async (req, res) => {
+  try {
+    const productId = req.params.id;
+    await dbPool.promise().query('Delete from product_sales_report where id=?',[productId]);
+    const [result] = await dbPool.promise().query('DELETE FROM products WHERE id = ?', [productId]);
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    
+    res.json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).json({ message: 'Failed to delete product' });
+  }
+});
+
+
